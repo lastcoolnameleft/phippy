@@ -3,7 +3,7 @@ from django import forms
 import datetime
 
 class ToyForm(forms.Form):
-    """ Form for Phippy Phinder.  """
+    """ Form for Phippy and Friends.  """
     toy_id = forms.IntegerField(label='Toy #')
     name = forms.CharField(label='Toy name', max_length=100, disabled=False, required=False)
     location = forms.CharField(label='Location', max_length=100)

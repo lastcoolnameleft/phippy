@@ -19,6 +19,9 @@ variable "agent_count" {
 variable "ssh_public_key" {
     default = "~/.ssh/id_rsa.pub"
 }
+variable "kubernetes_version" {
+    default = "1.11.5"
+}
 
 variable "client_id" {
     type = "string"
