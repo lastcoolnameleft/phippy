@@ -23,7 +23,7 @@
 
            location_list.forEach((location, index) => {
                var position = new google.maps.LatLng( Number(location.fields.latitude), Number(location.fields.longitude) );
-               var marker = new google.maps.Marker({ position: position, map: map, icon: '/static/icons/toy-32x32.png' });
+               var marker = new google.maps.Marker({ position: position, map: map, icon: '/static/icons/phippy-32x32.png' });
    
                if (!(focus_lat && focus_long)) {
                    bounds.extend(position);
