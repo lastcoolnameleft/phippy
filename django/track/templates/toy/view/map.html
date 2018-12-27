@@ -13,7 +13,7 @@
        var focus_zoom={{ map.focus_zoom }};
        var toy_location_id={{ map.toy_location_id }};
        var location_list={{ map.location_list|safe }};
-       
+
        function initMap() {
            var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: focus_zoom,
@@ -41,7 +41,11 @@
    
            if (!(focus_lat && focus_long)) {
                map.fitBounds(bounds);
-               map.setZoom(focus_zoom);
+               // https://stackoverflow.com/questions/2437683/google-maps-api-v3-can-i-setzoom-after-fitbounds
+               var listener = google.maps.event.addListener(map, "idle", function() {
+                   map.setZoom(focus_zoom);
+                   google.maps.event.removeListener(listener);
+               });
            }
    
        }

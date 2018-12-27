@@ -19,7 +19,7 @@
                     <select onChange="javascript:redirectToToyLocation(this)">
                       <option value=""></option>
 {% for toy_l in toy_location_list %}
-                      <option value="{{ toy_l.toy_location_id }}" {% if toy_l.toy_location_id == map.toy_location_id %}selected{% endif %}>{{ toy_l.location }}</option>{% endfor %}
+                      <option value="{{ toy_l.id }}" {% if toy_l.id == map.toy_location_id %}selected{% endif %}>{{ toy_l.location }}</option>{% endfor %}
                     </select>
               </li>
 {% endif %}
