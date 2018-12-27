@@ -31,10 +31,8 @@
                             <label for="{{ form.toy_id.id_for_label }}">New or Existing Toy:</label>
                         </dt>
                         <dd class="col-sm-10">
-                            <select>
-                                <option value="new">New</option>
-                                <option value="existing">Existing</option>
-                            </select>
+                            {{ form.new_or_existing.errors }}
+                            {{ form.new_or_existing }}
                         </dd>
 
                         {{ form.name.errors }}

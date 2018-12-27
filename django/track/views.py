@@ -15,14 +15,14 @@ from haversine import haversine
 def index(request):
     """ / path """
     toy_location_list = ToyLocation.objects.all()
-    toy_location_json = serializers.serialize('json', toy_location_list)
+    #toy_location_json = serializers.serialize('json', toy_location_list)
     map_data = {
         'width': '100%',
         'height': '800px',
         'focus_lat': 23,
         'focus_long': 10,
         'focus_zoom': 2,
-        'location_list': toy_location_json,
+        'location_list': [], #toy_location_json,
         'toy_location_id': 0,
     }
 
@@ -56,11 +56,11 @@ def detail(request, toy_id):
 
 def location(request, toy_location_id):
     """ Show /toy/$toy_id """
-    toy_location = get_object_or_404(ToyLocation, pk=toy_location_id)
+    toy_location = get_object_or_404(ToyLocation, id=toy_location_id)
 
     photos = ToyLocationPhoto.objects.filter(toy_location_id=toy_location_id)
 
-    toy_location_list = ToyLocation.objects.filter(toy_id=toy_location.toy.toy_id)
+    toy_location_list = ToyLocation.objects.filter(toy_id=toy_location.toy_id)
     toy_location_json = serializers.serialize('json', toy_location_list, use_natural_foreign_keys=True)
     map_data = {
         'width': '100%',
@@ -96,29 +96,22 @@ def mark(request):
         form = ToyForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            toy_id = form.cleaned_data['toy_id']
-            try:
-                toy = Toy.objects.get(pk=toy_id)
-                if toy.name == 'Unnamed' and form.cleaned_data['name'] != 'Unnamed':
-                    toy.name = form.cleaned_data['name']
-            except Toy.DoesNotExist:
-                name = form.cleaned_data['name'] if form.cleaned_data['name'] else 'Unnamed'
-                toy = Toy(toy_id=toy_id,
-                            name=name, approved='Y',
-                            create_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                            comments='')
+            new_or_existing = form.cleaned_data['new_or_existing']
+            name = form.cleaned_data['name']
+            if ( new_or_existing == 'new'):
+                toy = Toy(name=name, approved='Y',
+                          create_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                          comments='')
+                toy.save()
+            else:
+                toy = Toy.objects.get(name=name)
 
-            # Calculate the distance since last location
-            last_toy_location = ToyLocation.objects.filter(toy_id=toy_id).order_by('-date_time')[0]
-            distance_travelled = haversine((last_toy_location.latitude, last_toy_location.longitude),
-                                           (form.cleaned_data['lat'], form.cleaned_data['lng']), miles=True)
             toy_location = ToyLocation(toy=toy,
                                          latitude=form.cleaned_data['lat'],
                                          longitude=form.cleaned_data['lng'],
                                          location=form.cleaned_data['location'],
                                          date_time=form.cleaned_data['date_time'],
                                          comments=form.cleaned_data['comments'],
-                                         distance_to=round(distance_travelled, 2),
                                          user=request.user,
                                          approved='Y')
             toy_location.save()
@@ -130,11 +123,9 @@ def mark(request):
                                                         flickr_thumbnail_url=photo_info['sizes']['Small 320']['source'])
                 toy_location_photo.save()
 
-            toy.total_distance = round(ToyLocation.objects.filter(toy_id=toy_id).aggregate(Sum('distance_to'))['distance_to__sum'], 2)
-            toy.save()
 
             # redirect to a new URL:
-            return HttpResponseRedirect('/location/' + str(toy_location.toy_location_id))
+            return HttpResponseRedirect('/location/' + str(toy_location.id))
     # if a GET (or any other method) we'll create a blank form
     else:
         form = ToyForm()

@@ -14,31 +14,25 @@
 
           <dl class="row">
               <dt class="col-sm-3">Name</dt>
-              <dd class="col-sm-9" id="duck_name">{{ duck.name }}</dd>
+              <dd class="col-sm-9" id="toy_name">{{ toy.name }}</dd>
                   <dt class="col-sm-3">Location</dt>
-                  <dd class="col-sm-9">{{ duck_location.location }}</dd>
+                  <dd class="col-sm-9">{{ toy_location.location }}</dd>
 
                   <dt class="col-sm-3">Comments</dt>
-                  <dd class="col-sm-9">{{ duck_location.comments}}</dd>
+                  <dd class="col-sm-9">{{ toy_location.comments}}</dd>
 
                   <dt class="col-sm-3">Date/Time</dt>
-                  <dd class="col-sm-9">{{ duck_location.date_time }}</dd>
-
-                  <dt class="col-sm-3">Total Distance Travelled</dt>
-                  <dd class="col-sm-9">{{ duck.total_distance|floatformat:-2 }} miles</dd>
-
-                  <dt class="col-sm-3">Distance to this point</dt>
-                  <dd class="col-sm-9">{{ duck_location.distance_to|floatformat:-2 }} miles</dd>
+                  <dd class="col-sm-9">{{ toy_location.date_time }}</dd>
 
                   <dt class="col-sm-3">Latitude</dt>
-                  <dd class="col-sm-9">{{ duck_location.latitude|floatformat:-5 }}</dd>
+                  <dd class="col-sm-9">{{ toy_location.latitude|floatformat:-5 }}</dd>
 
                   <dt class="col-sm-3">Longitude</dt>
-                  <dd class="col-sm-9">{{ duck_location.longitude|floatformat:-5 }}</dd>
-{% if duck_links %}
+                  <dd class="col-sm-9">{{ toy_location.longitude|floatformat:-5 }}</dd>
+{% if toy_links %}
                   <dt class="col-sm-3">Links</dt>
                   <dd class="col-sm-9">
-{% for link in duck_links %}
+{% for link in toy_links %}
                     <a href='{{ link }}'>{{ link }}</a>{% endfor %}
                   </dd>
 {% endif %}
