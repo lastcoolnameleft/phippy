@@ -7,7 +7,7 @@ SOCIAL_AUTH_FACEBOOK_SECRET = ''
 
 FLICKR_API_KEY = ''
 FLICKR_API_SECRET = ''
-FLICKR_AUTH_FILE = '/code/duckiehunt/secrets/authfile'
+FLICKR_AUTH_FILE = 'phippy/secrets/authfile'
 FLICKR_PHOTO_IS_PUBLIC = '0'
 
 UPLOAD_PATH = 'uploads/'
