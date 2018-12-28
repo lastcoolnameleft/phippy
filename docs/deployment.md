@@ -68,3 +68,23 @@ kubens prod
 kubectl create secret generic phippy-django --from-file=config/aks-prod-django/settings.py
 helm install ../charts/phippy --name phippy-prod --namespace prod --values charts/php/values-prod.yaml
 ```
+
+## Generate Flickr Key/Secret/Authfile
+
+First, get the Flickr Key and Secret:  https://www.flickr.com/services/apps/by/161278422@N05
+
+Then, using the key and secret, generate the Python Flickr API Authfile:
+
+```shell
+>>> import flickr_api
+>>> flickr_api.set_keys(api_key = '<KEY>', api_secret='<SECRET>')
+>>> a = flickr_api.auth.AuthHandler()
+>>> perms="write"
+>>> url = a.get_authorization_url(perms)
+>>> print(url)
+https://www.flickr.com/services/oauth/authorize?oauth_token=xxxxxxxxxx&perms=write
+# Go to this URL and look for the oauth_verifier field
+>>> a.set_verifier("<OAUTH VERIFIER>")
+>>> flickr_api.set_auth_handler(a)
+>>> a.save('phippy/secrets/authfile')
+```

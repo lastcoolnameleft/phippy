@@ -116,11 +116,11 @@ def mark(request):
                                          approved='Y')
             toy_location.save()
             if request.FILES and request.FILES['image']:
-                photo_info = media.handle_uploaded_file(request.FILES['image'], toy_id,
+                photo_info = media.handle_uploaded_file(request.FILES['image'], toy.id,
                                                         toy.name, form.cleaned_data['comments'])
                 toy_location_photo = ToyLocationPhoto(toy_location=toy_location,
-                                                        flickr_photo_id=photo_info['id'],
-                                                        flickr_thumbnail_url=photo_info['sizes']['Small 320']['source'])
+                                                      flickr_photo_id=photo_info['id'],
+                                                      flickr_thumbnail_url=photo_info['sizes']['Small 320']['source'])
                 toy_location_photo.save()
 
 
