@@ -40,4 +40,20 @@ resource "azurerm_kubernetes_cluster" "phippy_k8s" {
   }
 }
 
+resource "azurerm_storage_account" "phippy_k8s" {
+  name                     = "phippy"
+  resource_group_name      = "${azurerm_resource_group.phippy_k8s.name}"
+  location                 = "${azurerm_resource_group.phippy_k8s.location}"
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+}
+
+resource "azurerm_container_registry" "test" {
+  name                = "phippy"
+  resource_group_name = "${azurerm_resource_group.phippy_k8s.name}"
+  location            = "${azurerm_resource_group.phippy_k8s.location}"
+  admin_enabled       = true
+  sku                 = "Classic"
+  storage_account_id  = "${azurerm_storage_account.phippy_k8s.id}"
+}
 
