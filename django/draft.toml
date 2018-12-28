@@ -1,0 +1,11 @@
+[environments]
+  [environments.development]
+    name = "phippy-dev"
+    namespace = "dev"
+    wait = true
+    watch = true
+    auto-connect = false
+    dockerfile = "Dockerfile"
+    chart = "../charts/phippy"
+    set = []
+    registry = "phippy.azurecr.io"

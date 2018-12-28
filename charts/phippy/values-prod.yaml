@@ -1,0 +1,58 @@
+# Default values for PHP.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: phippy.azurecr.io/phippy
+  tag: k8s
+  pullPolicy: IfNotPresent
+
+service:
+  name: phippy
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8000
+
+deployment:
+  appConfigMountPath: /code/track/secrets/
+  imagesMountPath: /code/uploads/
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+volumes:
+- name: app-config
+  secret:
+    secretName: phippy-django
+- name: images
+  flexVolume:
+    driver: "azure/blobfuse"
+    readOnly: false
+    secretRef:
+      name: blobfusecreds
+    options:
+      container: prod
+      tmppath: /tmp/blobfuse
+      mountoptions: "--file-cache-timeout-in-seconds=120 --use-https=true"
+
+env:
+  ciBaseUrl: https://prod.phippy.lastcoolnameleft.com/
+
+ingress:
+  enabled: true
+  host: prod.phippy.lastcoolnameleft.com
+  clusterIssuer:
+    enabled: true
+    name: letsencrypt-prod
+    server: https://acme-v02.api.letsencrypt.org/directory
+  certificateName: prod-tls-secret
+  rootRedirect:
+    enabled: true
+    redirectUrl: https://prod.phippy.lastcoolnameleft.com
+    rootUrl: prod.phippy.lastcoolnameleft.com

@@ -1,0 +1,53 @@
+replicaCount: 1
+
+image:
+  repository: phippy.azurecr.io/phippy
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  name: phippy
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8000
+
+deployment:
+  appConfigMountPath: /code/phippy/secrets/
+  imagesMountPath: /code/uploads/
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+volumes:
+- name: app-config
+  secret:
+    secretName: phippy-django
+- name: images
+  flexVolume:
+    driver: "azure/blobfuse"
+    readOnly: false
+    secretRef:
+      name: blobfusecreds
+    options:
+      container: dev
+      tmppath: /tmp/blobfuse
+      mountoptions: "--file-cache-timeout-in-seconds=120 --use-https=true"
+
+env:
+  ciBaseUrl: https://dev.phippy.lastcoolnameleft.com/
+
+ingress:
+  enabled: true
+  host: dev.phippy.lastcoolnameleft.com
+  clusterIssuer:
+    enabled: true
+    name: letsencrypt-prod
+    server: https://acme-v02.api.letsencrypt.org/directory
+  certificateName: dev-tls-secret
+  rootRedirect:
+    enabled: false
