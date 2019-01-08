@@ -8,8 +8,6 @@ kubectl port-forward svc/mysql 3308:3306
 python manage.py migrate
 ```
 
-# Deployment
-
 ## Deploy helm + mysql
 
 ```shell
@@ -55,7 +53,7 @@ kubectl create secret generic blobfusecreds --from-literal accountname=phippy --
 ```shell
 kubectl create ns dev
 kubens dev
-kubectl create secret generic phippy-django --from-file=config/aks-dev-django/settings.py
+kubectl create secret generic phippy-django --from-file=config/aks-dev-django/settings.py --from-file=config/aks-dev-django/authfile
 az acr login -n phippy
 draft up
 ```
